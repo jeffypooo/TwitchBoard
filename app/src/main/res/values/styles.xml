@@ -1,0 +1,33 @@
+<resources>
+
+
+    <style name="TwitchBoard" parent="Theme.AppCompat.NoActionBar" >
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:buttonStyle">@style/TwitchBoard.Button</item>
+        <item name="android:borderlessButtonStyle">@style/TwitchBoard.Button.Borderless</item>
+    </style>
+
+
+    <style name="TwitchBoard.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@drawable/btn_colored_text</item>
+    </style>
+
+    <style name="TwitchBoard.Button.Borderless" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@drawable/btn_borderless_default</item>
+    </style>
+    
+    <style name="TwitchBoard.TextAppearance.TwitchFont" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="fontPath">@string/twitch_font_path</item>
+    </style>
+
+    <style name="TwitchFontHeader" parent="TwitchBoard.TextAppearance.TwitchFont">
+        <item name="android:textSize">@dimen/text_huge</item>
+    </style>
+
+
+</resources>

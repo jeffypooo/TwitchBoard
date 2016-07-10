@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TwitchBoard</string>
+    <string name="twitch_login">Twitch Login</string>
+    <string name="user_name">User name</string>
+    <string name="password">Password</string>
+    <string name="authorize">Authorize</string>
+    <string name="title_header">title</string>
+    <string name="broadcast_title_hint">Enter broadcast title...</string>
+    <string name="playing_header">playing</string>
+    <string name="twitch_font_path">fonts/dimitri.ttf</string>
+    <string name="game_hint">Enter game or activity...</string>
+    <string name="update">Update</string>
+
+</resources>
