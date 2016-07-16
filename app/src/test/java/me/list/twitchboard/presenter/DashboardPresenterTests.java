@@ -33,9 +33,13 @@ public class DashboardPresenterTests {
 
     @Test
     public void shouldSetChannelInformation() {
+        String name = "test name";
         String status = "test status";
         String game = "test game";
-        final Channel apiResult = new Channel(status, game);
+        final Channel apiResult = new Channel()
+                .withName(name)
+                .withStatus(status)
+                .withGame(game);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -51,9 +55,13 @@ public class DashboardPresenterTests {
 
     @Test
     public void shouldShowUpdateConfirmationAndSetInformation() {
+        String name = "test name";
         String status = "test status";
         String game = "test game";
-        final Channel apiResult = new Channel(status, game);
+        final Channel apiResult = new Channel()
+                .withName(name)
+                .withStatus(status)
+                .withGame(game);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {

@@ -10,8 +10,10 @@ import java.io.IOException;
 import me.list.twitchboard.twitch.model.Channel;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -20,6 +22,11 @@ import okhttp3.Response;
 public class TwitchApiImpl implements TwitchApi {
 
     private static final String API_URL_BASE = "https://api.twitch.tv/kraken";
+    private static final String API_URL_CHANNEL_READ = API_URL_BASE + "/channel";
+    private static final String API_URL_CHANNELS_BASE = API_URL_BASE + "/channels";
+    private static final String HEADER_ACCEPT = "Accept";
+    private static final String HEADER_AUTH = "Authorization";
+    private static final String MEDIA_TWITCH_JSON_V3 = "application/vnd.twitchtv.v3+json";
     private static final String TAG = "TwitchApiImpl";
     private final OkHttpClient httpClient;
     private final String oauthToken;
@@ -32,28 +39,67 @@ public class TwitchApiImpl implements TwitchApi {
     @Override
     public void getChannel(final ChannelCallback callback) {
         Request request = new Request.Builder()
-                .url(API_URL_BASE + "/channel")
-                .addHeader("Accept", "application/vnd.twitchtv.v3+json")
-                .addHeader("Authorization", "OAuth " + this.oauthToken)
+                .url(API_URL_CHANNEL_READ)
+                .addHeader(HEADER_ACCEPT, MEDIA_TWITCH_JSON_V3)
+                .addHeader(HEADER_AUTH, getAuthArg())
                 .build();
-        this.httpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "onFailure() called with: " + "call = [" + call + "], e = [" + e + "]");
-            }
+        this.httpClient.newCall(request).enqueue(new ChannelRequestCallback(callback));
+    }
 
+    @Override
+    public void updateChannel(final String status, final String game, final ChannelCallback callback) {
+        getChannel(new ChannelCallback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Moshi moshi = new Moshi.Builder().build();
-                JsonAdapter<Channel> channelAdapter = moshi.adapter(Channel.class);
-                Channel channel = channelAdapter.fromJson(response.body().source());
-                callback.onGetChannel(channel);
+            public void onGetChannel(Channel channel) {
+                channel.setStatus(status);
+                channel.setGame(game);
+                String json = "{" +
+                        "\"channel\":{" +
+                        "\"status\":\"" + status + "\"," +
+                        "\"game\":\"" + game + "\"" +
+                        "}" +
+                        "}";
+                Request request = new Request.Builder()
+                        .url(channel.get_links().getSelf())
+                        .addHeader(HEADER_ACCEPT, MEDIA_TWITCH_JSON_V3)
+                        .addHeader(HEADER_AUTH, getAuthArg())
+                        .put(RequestBody.create(
+                                MediaType.parse(MEDIA_TWITCH_JSON_V3),
+                                json
+                        ))
+                        .build();
+                httpClient.newCall(request).enqueue(new ChannelRequestCallback(callback));
             }
         });
     }
 
-    @Override
-    public void updateChannel(String status, String game, ChannelCallback callback) {
-
+    private String getAuthArg() {
+        return "OAuth " + oauthToken;
     }
+
+    private static class ChannelRequestCallback implements Callback {
+
+        private final ChannelCallback channelCallback;
+
+        ChannelRequestCallback(ChannelCallback channelCallback) {
+            this.channelCallback = channelCallback;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d(TAG, "onFailure() called with: " + "call = [" + call + "], e = [" + e + "]");
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            if (response.isSuccessful()) {
+                Moshi moshi = new Moshi.Builder().build();
+                JsonAdapter<Channel> channelAdapter = moshi.adapter(Channel.class);
+                String body = response.body().string();
+                Channel channel = channelAdapter.fromJson(body);
+                this.channelCallback.onGetChannel(channel);
+            }
+        }
+    }
+
 }
