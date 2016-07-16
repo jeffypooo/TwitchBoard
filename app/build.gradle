@@ -23,6 +23,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.+'
+
     //TODO update to 24.0.0 if needed
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.0-RC1'
@@ -31,4 +33,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.1.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
+
 }

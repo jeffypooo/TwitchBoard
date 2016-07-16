@@ -5,21 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.lang.ref.WeakReference;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.list.twitchboard.twitch.ChannelCallback;
-import me.list.twitchboard.twitch.Twitch;
-import me.list.twitchboard.twitch.TwitchApi;
-import me.list.twitchboard.twitch.UserCallback;
-import me.list.twitchboard.twitch.model.BaseChannel;
-import me.list.twitchboard.twitch.model.Channel;
-import me.list.twitchboard.twitch.model.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -35,9 +25,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     //endregion
 
-    private Twitch twitch;
-    private Channel channel;
-    private User user;
 
     //region Activity Lifecycle
 
@@ -47,8 +34,6 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
         initTwitchAPI();
-        initUpdateButton();
-        loadChannelData();
     }
 
     @Override
@@ -62,28 +47,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Nullable
     private void initTwitchAPI() {
-        String authToken = loadAuthToken();
-        if (authToken != null) {
-            this.twitch = new TwitchApi(authToken);
-        }
+
     }
 
-    private void loadChannelData() {
-        if (this.twitch != null) {
-            twitch.getUser(new UserCallback() {
-                @Override
-                public void didGetUser(User user) {
-                    DashboardActivity.this.user = user;
-                    twitch.getChannel(new ChannelCallback() {
-                        @Override
-                        public void didGetChannel(Channel channel) {
-
-                        }
-                    }, user);
-                }
-            });
-        }
-    }
 
     @Nullable
     private String loadAuthToken() {
@@ -91,65 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
         return prefs.getString(TwitchBoard.KEY_AUTH_TOKEN, null);
     }
 
-    private void initUpdateButton() {
-        this.updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String status = statusField.getText().toString();
-                String game = gameField.getText().toString();
-                channel.setStatus(status);
-                channel.setGame(game);
-                twitch.updateChannel(channel, user);
-            }
-        });
-    }
 
     //endregion
 
-    //region Callback Classes
-
-    private static class ChannelCB extends CallbackBase implements ChannelCallback {
-
-        ChannelCB(DashboardActivity activity) {
-            super(activity);
-        }
-
-        @Override
-        public void didGetChannel(final Channel channel) {
-            final DashboardActivity activity = getActivity();
-            if (activity != null) {
-                activity.channel = channel;
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String status = channel.getStatus();
-                        String game = channel.getGame();
-                        if (status != null) {
-                            activity.statusField.setText(status);
-                        }
-                        if (game != null) {
-                            activity.gameField.setText(game);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    static abstract class CallbackBase {
-
-        protected WeakReference<DashboardActivity> activityRef;
-
-        CallbackBase(DashboardActivity activity) {
-            this.activityRef = new WeakReference<>(activity);
-        }
-
-        @Nullable
-        protected DashboardActivity getActivity() {
-            return this.activityRef.get();
-        }
-
-    }
-
-    //endregion
 }

@@ -1,20 +1,41 @@
 package me.list.twitchboard.twitch.model;
 
-import android.support.annotation.Nullable;
-
 /**
  * Created by masterjefferson on 7/10/2016.
  */
-public interface Channel {
-    @Nullable
-    String getStatus();
+public class Channel {
 
-    void setStatus(String status);
+    public static final String KEY_STATUS = "status";
+    public static final String KEY_GAME = "game";
 
-    @Nullable
-    String getGame();
+    private String status, game;
 
-    void setGame(String game);
+    public Channel(String status, String game) {
+        this.status = status;
+        this.game = game;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
 
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public String getGame() {
+        return this.game;
+    }
+
+
+    public void setGame(String game) {
+        this.game = game;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[status='%s', game='%s']", status, game);
+    }
 }

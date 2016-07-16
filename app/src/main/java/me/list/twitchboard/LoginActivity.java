@@ -12,7 +12,6 @@ import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.list.twitchboard.twitch.Twitch;
 import me.list.twitchboard.twitch.UrlFactory;
 import me.list.twitchboard.util.logging.LOG;
 
@@ -86,15 +85,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String getDefaultAuthURL() {
-        return UrlFactory.userAuthURL(
-                Twitch.CLIENT_ID,
-                Twitch.CLIENT_REDIRECT_URL,
-                USER_READ.raw,
-                USER_BLOCKS_EDIT.raw,
-                USER_FOLLOWS_EDIT.raw,
-                CHANNEL_EDITOR.raw,
-                CHANNEL_SUBSCRIPTIONS.raw,
-                CHAT_LOGIN.raw,
-                CHANNEL_FEED_EDIT.raw);
+//        return UrlFactory.userAuthURL(
+//                Twitch.CLIENT_ID,
+//                Twitch.CLIENT_REDIRECT_URL,
+//                USER_READ.raw,
+//                USER_BLOCKS_EDIT.raw,
+//                USER_FOLLOWS_EDIT.raw,
+//                CHANNEL_EDITOR.raw,
+//                CHANNEL_SUBSCRIPTIONS.raw,
+//                CHAT_LOGIN.raw,
+//                CHANNEL_FEED_EDIT.raw);
+        return null;
     }
 }
