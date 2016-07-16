@@ -11,7 +11,7 @@ public class BaseUser implements User {
     public static final String KEY_DISPLAY_NAME = "display_name";
     public static final String KEY_BIO = "bio";
 
-    private String name, displayName, bio;
+    public String name, displayName, bio;
 
     public BaseUser(String name, String displayName, String bio) {
         this.name = name;

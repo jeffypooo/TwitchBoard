@@ -9,6 +9,12 @@ public interface Channel {
     @Nullable
     String getStatus();
 
+    void setStatus(String status);
+
     @Nullable
     String getGame();
+
+    void setGame(String game);
+
+
 }

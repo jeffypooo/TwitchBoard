@@ -14,8 +14,10 @@ import java.lang.ref.WeakReference;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.list.twitchboard.twitch.ChannelCallback;
+import me.list.twitchboard.twitch.Twitch;
 import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.UserCallback;
+import me.list.twitchboard.twitch.model.BaseChannel;
 import me.list.twitchboard.twitch.model.Channel;
 import me.list.twitchboard.twitch.model.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -33,7 +35,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     //endregion
 
-    private TwitchApi twitchApi;
+    private Twitch twitch;
+    private Channel channel;
+    private User user;
 
     //region Activity Lifecycle
 
@@ -43,6 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
         initTwitchAPI();
+        initUpdateButton();
         loadChannelData();
     }
 
@@ -59,16 +64,22 @@ public class DashboardActivity extends AppCompatActivity {
     private void initTwitchAPI() {
         String authToken = loadAuthToken();
         if (authToken != null) {
-            this.twitchApi = new TwitchApi(authToken);
+            this.twitch = new TwitchApi(authToken);
         }
     }
 
     private void loadChannelData() {
-        if (this.twitchApi != null) {
-            twitchApi.getUser(new UserCallback() {
+        if (this.twitch != null) {
+            twitch.getUser(new UserCallback() {
                 @Override
                 public void didGetUser(User user) {
-                    twitchApi.getChannel(new ChannelCB(DashboardActivity.this), user);
+                    DashboardActivity.this.user = user;
+                    twitch.getChannel(new ChannelCallback() {
+                        @Override
+                        public void didGetChannel(Channel channel) {
+
+                        }
+                    }, user);
                 }
             });
         }
@@ -84,7 +95,11 @@ public class DashboardActivity extends AppCompatActivity {
         this.updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO call TwitchApi
+                String status = statusField.getText().toString();
+                String game = gameField.getText().toString();
+                channel.setStatus(status);
+                channel.setGame(game);
+                twitch.updateChannel(channel, user);
             }
         });
     }
@@ -103,6 +118,7 @@ public class DashboardActivity extends AppCompatActivity {
         public void didGetChannel(final Channel channel) {
             final DashboardActivity activity = getActivity();
             if (activity != null) {
+                activity.channel = channel;
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

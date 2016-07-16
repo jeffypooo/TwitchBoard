@@ -21,7 +21,17 @@ public class BaseChannel implements Channel {
     }
 
     @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
     public String getGame() {
         return this.game;
+    }
+
+    @Override
+    public void setGame(String game) {
+        this.game = game;
     }
 }
