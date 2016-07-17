@@ -17,6 +17,7 @@ import me.list.twitchboard.util.logging.LOG;
 
 import static me.list.twitchboard.twitch.AuthScope.CHANNEL_EDITOR;
 import static me.list.twitchboard.twitch.AuthScope.CHANNEL_FEED_EDIT;
+import static me.list.twitchboard.twitch.AuthScope.CHANNEL_READ;
 import static me.list.twitchboard.twitch.AuthScope.CHANNEL_SUBSCRIPTIONS;
 import static me.list.twitchboard.twitch.AuthScope.CHAT_LOGIN;
 import static me.list.twitchboard.twitch.AuthScope.USER_BLOCKS_EDIT;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 USER_READ.raw,
                 USER_BLOCKS_EDIT.raw,
                 USER_FOLLOWS_EDIT.raw,
+                CHANNEL_READ.raw,
                 CHANNEL_EDITOR.raw,
                 CHANNEL_SUBSCRIPTIONS.raw,
                 CHAT_LOGIN.raw,
