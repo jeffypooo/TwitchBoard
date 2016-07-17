@@ -435,7 +435,7 @@ public class Channel {
     /**
      * @return The _links
      */
-    public ChannelLinks get_links() {
+    public ChannelLinks getLinks() {
         return _links;
     }
 

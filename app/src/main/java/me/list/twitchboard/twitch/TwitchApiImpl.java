@@ -23,10 +23,10 @@ public class TwitchApiImpl implements TwitchApi {
 
     private static final String API_URL_BASE = "https://api.twitch.tv/kraken";
     private static final String API_URL_CHANNEL_READ = API_URL_BASE + "/channel";
-    private static final String API_URL_CHANNELS_BASE = API_URL_BASE + "/channels";
     private static final String HEADER_ACCEPT = "Accept";
     private static final String HEADER_AUTH = "Authorization";
     private static final String MEDIA_TWITCH_JSON_V3 = "application/vnd.twitchtv.v3+json";
+    private static final String MEDIA_JSON = "application/json";
     private static final String TAG = "TwitchApiImpl";
     private final OkHttpClient httpClient;
     private final String oauthToken;
@@ -38,11 +38,7 @@ public class TwitchApiImpl implements TwitchApi {
 
     @Override
     public void getChannel(final ChannelCallback callback) {
-        Request request = new Request.Builder()
-                .url(API_URL_CHANNEL_READ)
-                .addHeader(HEADER_ACCEPT, MEDIA_TWITCH_JSON_V3)
-                .addHeader(HEADER_AUTH, getAuthArg())
-                .build();
+        Request request = getStandardAuthRequestBuilder(API_URL_CHANNEL_READ).build();
         this.httpClient.newCall(request).enqueue(new ChannelRequestCallback(callback));
     }
 
@@ -51,20 +47,11 @@ public class TwitchApiImpl implements TwitchApi {
         getChannel(new ChannelCallback() {
             @Override
             public void onGetChannel(Channel channel) {
-                channel.setStatus(status);
-                channel.setGame(game);
-                String json = "{" +
-                        "\"channel\":{" +
-                        "\"status\":\"" + status + "\"," +
-                        "\"game\":\"" + game + "\"" +
-                        "}" +
-                        "}";
-                Request request = new Request.Builder()
-                        .url(channel.get_links().getSelf())
-                        .addHeader(HEADER_ACCEPT, MEDIA_TWITCH_JSON_V3)
-                        .addHeader(HEADER_AUTH, getAuthArg())
+                //TODO is there a better way to do this?
+                String json = getChannelPutJson(status, game);
+                Request request = getStandardAuthRequestBuilder(channel.getLinks().getSelf())
                         .put(RequestBody.create(
-                                MediaType.parse(MEDIA_TWITCH_JSON_V3),
+                                MediaType.parse("application/json"),
                                 json
                         ))
                         .build();
@@ -75,6 +62,21 @@ public class TwitchApiImpl implements TwitchApi {
 
     private String getAuthArg() {
         return "OAuth " + oauthToken;
+    }
+
+    private String getChannelPutJson(String status, String game) {
+        return String.format(
+                "{\"channel\":{\"status\": \"%s\",\"game\": \"%s\"}}",
+                status,
+                game
+        );
+    }
+
+    private Request.Builder getStandardAuthRequestBuilder(String url) {
+        return new Request.Builder()
+                .url(url)
+                .addHeader(HEADER_ACCEPT, MEDIA_TWITCH_JSON_V3)
+                .addHeader(HEADER_AUTH, getAuthArg());
     }
 
     private static class ChannelRequestCallback implements Callback {

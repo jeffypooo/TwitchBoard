@@ -35,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        if (loadAuthToken() != null) {
+            loginFinished();
+        }
     }
 
 
@@ -85,16 +87,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String getDefaultAuthURL() {
-//        return UrlFactory.userAuthURL(
-//                Twitch.CLIENT_ID,
-//                Twitch.CLIENT_REDIRECT_URL,
-//                USER_READ.raw,
-//                USER_BLOCKS_EDIT.raw,
-//                USER_FOLLOWS_EDIT.raw,
-//                CHANNEL_EDITOR.raw,
-//                CHANNEL_SUBSCRIPTIONS.raw,
-//                CHAT_LOGIN.raw,
-//                CHANNEL_FEED_EDIT.raw);
-        return null;
+        return UrlFactory.userAuthURL(
+                TwitchBoard.TWITCH_CLIENT_ID,
+                TwitchBoard.TWITCH_CLIENT_REDIRECT_URI,
+                USER_READ.raw,
+                USER_BLOCKS_EDIT.raw,
+                USER_FOLLOWS_EDIT.raw,
+                CHANNEL_EDITOR.raw,
+                CHANNEL_SUBSCRIPTIONS.raw,
+                CHAT_LOGIN.raw,
+                CHANNEL_FEED_EDIT.raw);
     }
 }

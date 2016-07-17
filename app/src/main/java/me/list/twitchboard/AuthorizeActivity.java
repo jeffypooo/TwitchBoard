@@ -100,17 +100,17 @@ public class AuthorizeActivity extends AppCompatActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//            Log.v(TAG, "onPageStarted: " + url);
-//            if (url.startsWith(Twitch.CLIENT_REDIRECT_URL)) {
-//                view.stopLoading();
-//                Pattern pattern = Pattern.compile("#access_token=(.*)&");
-//                Matcher matcher = pattern.matcher(url);
-//                if (matcher.find()) {
-//                    notifyCallback(matcher.group(1));
-//                }
-//            } else {
-//                super.onPageStarted(view, url, favicon);
-//            }
+            Log.v(TAG, "onPageStarted: " + url);
+            if (url.startsWith(TwitchBoard.TWITCH_CLIENT_REDIRECT_URI)) {
+                view.stopLoading();
+                Pattern pattern = Pattern.compile("#access_token=(.*)&");
+                Matcher matcher = pattern.matcher(url);
+                if (matcher.find()) {
+                    notifyCallback(matcher.group(1));
+                }
+            } else {
+                super.onPageStarted(view, url, favicon);
+            }
         }
 
         private void notifyCallback(String token) {

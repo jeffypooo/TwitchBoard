@@ -21,14 +21,16 @@ public class TwitchApiTests {
 
     TwitchApi twitchApi;
     OkHttpClient httpClient;
-    static final String testAuthToken = "bcyo1mfhlzz22m07jc13ejgnc62613";
+    static final String testAuthToken = "vtllft6ufa8hgii319lkr33fxxc1bs";
 
     @Before
     public void setup() {
+        //TODO replace with mock
         httpClient = new OkHttpClient();
         twitchApi = new TwitchApiImpl(testAuthToken, httpClient);
     }
 
+    //TODO test with mocks instead of real objects
     @Test
     public void shouldGetExpectedChannel() {
         TwitchApi.ChannelCallback callback = mock(TwitchApi.ChannelCallback.class);
@@ -44,6 +46,7 @@ public class TwitchApiTests {
         verify(callback, timeout(1000)).onGetChannel(any(Channel.class));
     }
 
+    //TODO test with mocks instead of real objects
     @Test
     public void shouldUpdateChannel() {
         TwitchApi.ChannelCallback callback = mock(TwitchApi.ChannelCallback.class);
@@ -55,8 +58,8 @@ public class TwitchApiTests {
                 return null;
             }
         }).when(callback).onGetChannel(any(Channel.class));
-        twitchApi.updateChannel("test status", "Overwatch", callback);
-        verify(callback, timeout(1000)).onGetChannel(any(Channel.class));
+        twitchApi.updateChannel("test status!!!", "test game", callback);
+        verify(callback, timeout(5000)).onGetChannel(any(Channel.class));
     }
 
 }
