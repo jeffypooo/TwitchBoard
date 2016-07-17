@@ -9,6 +9,6 @@ public interface LoginView {
 
     void showURL(String url);
 
-    void finish();
+    void authorized();
 
 }

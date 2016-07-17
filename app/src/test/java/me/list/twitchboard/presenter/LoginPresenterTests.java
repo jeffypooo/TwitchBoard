@@ -3,6 +3,8 @@ package me.list.twitchboard.presenter;
 import org.junit.Before;
 import org.junit.Test;
 
+import me.list.twitchboard.TwitchBoard;
+import me.list.twitchboard.storage.SharedPrefsWrapper;
 import me.list.twitchboard.view.LoginView;
 
 import static org.mockito.Matchers.any;
@@ -15,12 +17,14 @@ import static org.mockito.Mockito.verify;
 public class LoginPresenterTests {
 
     LoginView mockView;
+    SharedPrefsWrapper mockPrefsWrapper;
     LoginPresenter presenter;
 
     @Before
     public void setup() {
         mockView = mock(LoginView.class);
-        presenter = new LoginPresenter(mockView);
+        mockPrefsWrapper = mock(SharedPrefsWrapper.class);
+        presenter = new LoginPresenter(mockView, mockPrefsWrapper);
     }
 
     @Test
@@ -43,9 +47,18 @@ public class LoginPresenterTests {
         verify(mockView).finish();
     }
 
+    @Test
+    public void shouldPersistTokenIfURLHasToken() {
+        String expectedToken = "testtoken1235";
+        String testURL = getTestAuthRedirectURL(expectedToken);
+        presenter.onPageLoadStarted(testURL);
+        verify(mockPrefsWrapper).putString(TwitchBoard.KEY_AUTH_TOKEN, expectedToken);
+
+    }
+
     private String getTestAuthRedirectURL(String token) {
         return String.format(
-                "https://localhost/#access_token=%s&scope=",
+                "http://localhost/#access_token=%s&scope=",
                 token
         );
     }

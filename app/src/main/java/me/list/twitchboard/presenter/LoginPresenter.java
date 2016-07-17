@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.list.twitchboard.TwitchBoard;
+import me.list.twitchboard.storage.SharedPrefsWrapper;
 import me.list.twitchboard.twitch.UrlFactory;
 import me.list.twitchboard.view.LoginView;
 
@@ -22,9 +23,11 @@ import static me.list.twitchboard.twitch.AuthScope.USER_READ;
 public class LoginPresenter {
 
     private final LoginView loginView;
+    private final SharedPrefsWrapper prefsWrapper;
 
-    public LoginPresenter(LoginView loginView) {
+    public LoginPresenter(LoginView loginView, SharedPrefsWrapper prefsWrapper) {
         this.loginView = loginView;
+        this.prefsWrapper = prefsWrapper;
     }
 
     public void authorizeClicked() {
@@ -49,7 +52,8 @@ public class LoginPresenter {
             Pattern pattern = Pattern.compile("#access_token=(.*)&");
             Matcher matcher = pattern.matcher(url);
             if (matcher.find()) {
-                loginView.finish();
+                prefsWrapper.putString(TwitchBoard.KEY_AUTH_TOKEN, matcher.group(1));
+                loginView.authorized();
             }
         }
     }
