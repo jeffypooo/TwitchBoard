@@ -32,6 +32,7 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.1'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     //TODO update to 24.0.0 if needed
     compile 'com.android.support:appcompat-v7:24.0.0'

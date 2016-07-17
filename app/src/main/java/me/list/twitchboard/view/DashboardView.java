@@ -6,6 +6,9 @@ package me.list.twitchboard.view;
 public interface DashboardView {
 
     void setStatusText(String text);
+
     void setGameText(String text);
+
     void showUpdateConfirmation(String name, String game);
+
 }

@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:paddingBottom="@dimen/margin_vert_med"
-    android:paddingLeft="@dimen/margin_horiz_med"
-    android:paddingRight="@dimen/margin_horiz_med"
-    android:paddingTop="@dimen/margin_vert_med"
-    tools:context="me.list.twitchboard.LoginActivity">
 
-    <ImageView
-        android:id="@+id/Login_Image_Header"
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Login_ViewSwitcher"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/Login_Layout_Start"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/twitch_logo_white"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_vert_med"
+        android:paddingLeft="@dimen/margin_horiz_med"
+        android:paddingRight="@dimen/margin_horiz_med"
+        android:paddingTop="@dimen/margin_vert_med"
+        tools:context="me.list.twitchboard.LoginActivity">
+
+        <ImageView
+            android:id="@+id/Login_Image_Header"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/twitch_logo_white" />
+
+
+        <Button
+            android:id="@+id/Login_Button_Authorize"
+            android:layout_width="@dimen/width_btn_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Login_Image_Header"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_vert_big"
+            android:text="@string/authorize" />
+
+
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/Login_WebView_AuthorizeWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/margin_vert_med"
+        android:paddingLeft="@dimen/margin_horiz_med"
+        android:paddingRight="@dimen/margin_horiz_med"
+        android:paddingTop="@dimen/margin_vert_med"
         />
 
-
-    <Button
-        android:id="@+id/Login_Button_Authorize"
-        android:layout_width="@dimen/width_btn_large"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/margin_vert_big"
-        android:layout_below="@+id/Login_Image_Header"
-        android:text="@string/authorize" />
-
-
-</RelativeLayout>
+</ViewSwitcher>

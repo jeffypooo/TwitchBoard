@@ -12,6 +12,7 @@ public interface TwitchApi {
     }
 
     void getChannel(ChannelCallback callback);
+
     void updateChannel(String status, String game, ChannelCallback callback);
 
 }
