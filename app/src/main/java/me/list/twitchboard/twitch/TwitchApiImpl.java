@@ -60,6 +60,33 @@ public class TwitchApiImpl implements TwitchApi {
         });
     }
 
+    @Override
+    public void getChannel2(final MyCallback<Channel> channelCallback) {
+        Request request = getStandardAuthRequestBuilder(API_URL_CHANNEL_READ).build();
+        this.httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                channelCallback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+
+                } else {
+                    // work out what went wrong
+                    switch (response.code()) {
+                        case 401:
+                            channelCallback.onFailure(new RuntimeException("unauthorized"));
+                            break;
+                        default:
+                            channelCallback.onFailure(new RuntimeException("unknown"));
+                    }
+                }
+            }
+        });
+    }
+
     private String getAuthArg() {
         return "OAuth " + oauthToken;
     }

@@ -15,4 +15,11 @@ public interface TwitchApi {
 
     void updateChannel(String status, String game, ChannelCallback callback);
 
+    interface MyCallback<T> {
+        void onReceived(T t);
+        void onFailure(Exception e);
+    }
+
+    void getChannel2(MyCallback<Channel> channelCallback);
+
 }
