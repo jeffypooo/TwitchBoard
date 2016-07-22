@@ -2,6 +2,7 @@ package me.list.twitchboard.presenter;
 
 import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.model.Channel;
+import me.list.twitchboard.twitch.model.Stream;
 import me.list.twitchboard.view.DashboardView;
 
 /**
@@ -26,6 +27,15 @@ public class DashboardPresenter {
         });
     }
 
+    public void refreshChannelStats() {
+        twitchApi.getStream(new TwitchApi.StreamCallback() {
+            @Override
+            public void onGetStream(Stream stream) {
+                updateStreamInfo(stream);
+            }
+        });
+    }
+
     public void onUpdateClicked(String status, String game) {
         this.twitchApi.updateChannel(status, game, new TwitchApi.ChannelCallback() {
             @Override
@@ -39,6 +49,15 @@ public class DashboardPresenter {
     private void updateChannelInfo(Channel channel) {
         this.dashboardView.setStatusText(channel.getStatus());
         this.dashboardView.setGameText(channel.getGame());
+        this.dashboardView.setTotalViewCount(channel.getViews());
+        this.dashboardView.setFollowerCount(channel.getFollowers());
     }
+
+    private void updateStreamInfo(Stream stream) {
+        int viewerCount = stream.getViewers() == null ? -1 : stream.getViewers();
+        dashboardView.setViewerCount(viewerCount);
+    }
+
+
 
 }

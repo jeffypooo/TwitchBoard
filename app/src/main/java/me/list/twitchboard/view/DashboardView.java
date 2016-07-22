@@ -9,6 +9,12 @@ public interface DashboardView {
 
     void setGameText(String text);
 
+    void setViewerCount(int count);
+
+    void setTotalViewCount(int count);
+
+    void setFollowerCount(int count);
+
     void showUpdateConfirmation(String name, String game);
 
 }

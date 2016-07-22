@@ -16,7 +16,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.list.twitchboard.presenter.LoginPresenter;
 import me.list.twitchboard.storage.SharedPrefsWrapperImpl;
+import me.list.twitchboard.twitch.TwitchApiImpl;
 import me.list.twitchboard.view.LoginView;
+import okhttp3.OkHttpClient;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         ButterKnife.bind(this);
         initPresenter();
         initWebView();
+        presenter.verifyExistingToken();
     }
 
     @OnClick(R.id.Login_Button_Authorize)
@@ -52,25 +55,21 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void showURL(final String url) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                viewSwitcher.showNext();
-                webView.loadUrl(url);
-            }
-        });
+        viewSwitcher.showNext();
+        webView.loadUrl(url);
     }
 
     @Override
     public void authorized() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        startActivity(new Intent(this, TabHostActivity.class));
         finish();
     }
 
     private void initPresenter() {
         presenter = new LoginPresenter(
                 this,
-                new SharedPrefsWrapperImpl(this, TwitchBoard.PREFS_AUTH)
+                new SharedPrefsWrapperImpl(this, TwitchBoard.PREFS_AUTH),
+                new TwitchApiImpl(null, new OkHttpClient())
         );
     }
 

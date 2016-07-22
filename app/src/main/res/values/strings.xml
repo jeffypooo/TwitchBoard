@@ -10,5 +10,8 @@
     <string name="twitch_font_path">fonts/dimitri.ttf</string>
     <string name="game_hint">Enter game or activity...</string>
     <string name="update">Update</string>
+    <string name="views_placeholder">1234</string>
+    <string name="follows_placeholder">7</string>
+    <string name="viewers_placheolder">11</string>
 
 </resources>

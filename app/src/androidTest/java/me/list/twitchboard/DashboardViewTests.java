@@ -3,7 +3,6 @@ package me.list.twitchboard;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class DashboardViewTests {
 
     @Rule
-    public final ActivityTestRule<DashboardActivity> activityTestRule =
-            new ActivityTestRule<>(DashboardActivity.class);
+    public final ActivityTestRule<DashboardFragment> activityTestRule =
+            new ActivityTestRule<>(DashboardFragment.class);
 
     @Test
     public void shouldUpdateTitleField() {

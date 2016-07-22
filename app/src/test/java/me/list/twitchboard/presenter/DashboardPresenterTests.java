@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import me.list.twitchboard.presenter.DashboardPresenter;
 import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.model.Channel;
+import me.list.twitchboard.twitch.model.Stream;
 import me.list.twitchboard.view.DashboardView;
 
 import static org.mockito.Matchers.any;
@@ -39,7 +39,9 @@ public class DashboardPresenterTests {
         final Channel apiResult = new Channel()
                 .withName(name)
                 .withStatus(status)
-                .withGame(game);
+                .withGame(game)
+                .withViews(1000)
+                .withFollowers(5000);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -51,6 +53,8 @@ public class DashboardPresenterTests {
         presenter.loadChannel();
         verify(mockView).setStatusText(status);
         verify(mockView).setGameText(game);
+        verify(mockView).setTotalViewCount(1000);
+        verify(mockView).setFollowerCount(5000);
     }
 
     @Test
@@ -61,7 +65,9 @@ public class DashboardPresenterTests {
         final Channel apiResult = new Channel()
                 .withName(name)
                 .withStatus(status)
-                .withGame(game);
+                .withGame(game)
+                .withViews(5)
+                .withFollowers(5);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -78,6 +84,22 @@ public class DashboardPresenterTests {
         verify(mockView).showUpdateConfirmation(status, game);
         verify(mockView).setStatusText(status);
         verify(mockView).setGameText(game);
+    }
+
+    @Test
+    public void shouldUpdateViewCount() {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                TwitchApi.StreamCallback cb = (TwitchApi.StreamCallback) invocation.getArguments()[0];
+                cb.onGetStream(new Stream()
+                        .withGame("test game")
+                        .withViewers(1000));
+                return null;
+            }
+        }).when(mockApi).getStream(any(TwitchApi.StreamCallback.class));
+        presenter.refreshChannelStats();
+        verify(mockView).setViewerCount(1000);
     }
 
 

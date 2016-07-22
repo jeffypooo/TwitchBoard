@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 
 import me.list.twitchboard.TwitchBoard;
 import me.list.twitchboard.storage.SharedPrefsWrapper;
+import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.UrlFactory;
+import me.list.twitchboard.twitch.model.Channel;
 import me.list.twitchboard.view.LoginView;
 
 import static me.list.twitchboard.twitch.AuthScope.CHANNEL_EDITOR;
@@ -24,10 +26,23 @@ public class LoginPresenter {
 
     private final LoginView loginView;
     private final SharedPrefsWrapper prefsWrapper;
+    private final TwitchApi twitchApi;
 
-    public LoginPresenter(LoginView loginView, SharedPrefsWrapper prefsWrapper) {
+    public LoginPresenter(LoginView loginView, SharedPrefsWrapper prefsWrapper, TwitchApi twitchApi) {
         this.loginView = loginView;
         this.prefsWrapper = prefsWrapper;
+        this.twitchApi = twitchApi;
+    }
+
+    public void verifyExistingToken() {
+        String token = prefsWrapper.getString(TwitchBoard.KEY_AUTH_TOKEN);
+        twitchApi.setOAuthToken(token);
+        twitchApi.getChannel(new TwitchApi.ChannelCallback() {
+            @Override
+            public void onGetChannel(Channel channel) {
+                loginView.authorized();
+            }
+        });
     }
 
     public void authorizeClicked() {

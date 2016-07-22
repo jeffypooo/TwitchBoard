@@ -1,6 +1,7 @@
 package me.list.twitchboard.twitch;
 
 import me.list.twitchboard.twitch.model.Channel;
+import me.list.twitchboard.twitch.model.Stream;
 
 /**
  * Created by masterjefferson on 7/16/2016.
@@ -11,8 +12,16 @@ public interface TwitchApi {
         void onGetChannel(Channel channel);
     }
 
+    interface StreamCallback {
+        void onGetStream(Stream stream);
+    }
+
     void getChannel(ChannelCallback callback);
 
+    void getStream(StreamCallback callback);
+
     void updateChannel(String status, String game, ChannelCallback callback);
+
+    void setOAuthToken(String token);
 
 }

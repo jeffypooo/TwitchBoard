@@ -5,12 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,9 +22,8 @@ import me.list.twitchboard.presenter.DashboardPresenter;
 import me.list.twitchboard.twitch.TwitchApiImpl;
 import me.list.twitchboard.view.DashboardView;
 import okhttp3.OkHttpClient;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class DashboardActivity extends AppCompatActivity implements DashboardView {
+public class DashboardFragment extends Fragment implements DashboardView {
 
     //region Views
 
@@ -31,6 +33,12 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
     EditText gameField;
     @BindView(R.id.Dashboard_Button_Update)
     Button updateButton;
+    @BindView(R.id.Dashboard_CurrentViewerCount)
+    TextView currentViewerCount;
+    @BindView(R.id.Dashboard_ViewCount)
+    TextView totalViewCount;
+    @BindView(R.id.Dashboard_FollowerCount)
+    TextView followerCount;
     @BindView(R.id.Dashboard_Layout)
     LinearLayout rootLayout;
 
@@ -40,19 +48,16 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
 
     //region Activity Lifecycle
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        ButterKnife.bind(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.activity_dashboard, container, false);
+        ButterKnife.bind(this, root);
         initPresenter();
         refreshChannelInfo();
+        return root;
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     //endregion
 
@@ -60,22 +65,31 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
 
     @Override
     public void setStatusText(final String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusField.setText(text);
-            }
-        });
+        threadSafeTextViewUpdate(statusField, text);
     }
 
     @Override
     public void setGameText(final String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                gameField.setText(text);
-            }
-        });
+        threadSafeTextViewUpdate(gameField, text);
+    }
+
+    @Override
+    public void setViewerCount(final int count) {
+        if (count < 0) {
+            threadSafeTextViewUpdate(currentViewerCount, "-");
+        } else {
+            threadSafeTextViewUpdate(currentViewerCount, Integer.toString(count));
+        }
+    }
+
+    @Override
+    public void setTotalViewCount(int count) {
+        threadSafeTextViewUpdate(totalViewCount, Integer.toString(count));
+    }
+
+    @Override
+    public void setFollowerCount(int count) {
+        threadSafeTextViewUpdate(followerCount, Integer.toString(count));
     }
 
     @Override
@@ -99,7 +113,8 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
 
     @Nullable
     private String loadAuthToken() {
-        SharedPreferences prefs = getSharedPreferences(TwitchBoard.PREFS_AUTH, MODE_PRIVATE);
+        SharedPreferences prefs = getActivity()
+                .getSharedPreferences(TwitchBoard.PREFS_AUTH, Context.MODE_PRIVATE);
         return prefs.getString(TwitchBoard.KEY_AUTH_TOKEN, null);
     }
 
@@ -108,12 +123,13 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
 
     @OnClick(R.id.Dashboard_Button_Update)
     void updateClicked() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
-        View view = getCurrentFocus();
+        View view = getActivity().getCurrentFocus();
         //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
-            view = new View(this);
+            view = new View(getActivity());
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         presenter.onUpdateClicked(getStatusText(), getGameText());
@@ -127,8 +143,18 @@ public class DashboardActivity extends AppCompatActivity implements DashboardVie
         return gameField.getText().toString();
     }
 
+    private void threadSafeTextViewUpdate(final TextView view, final String text) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                view.setText(text);
+            }
+        });
+    }
+
     private void refreshChannelInfo() {
         presenter.loadChannel();
+        presenter.refreshChannelStats();
     }
 
 

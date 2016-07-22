@@ -1,5 +1,6 @@
 package me.list.twitchboard.twitch;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.squareup.moshi.JsonAdapter;
@@ -8,6 +9,7 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import me.list.twitchboard.twitch.model.Channel;
+import me.list.twitchboard.twitch.model.Stream;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -23,15 +25,17 @@ public class TwitchApiImpl implements TwitchApi {
 
     private static final String API_URL_BASE = "https://api.twitch.tv/kraken";
     private static final String API_URL_CHANNEL_READ = API_URL_BASE + "/channel";
+    private static final String API_CHANNEL_STREAM_BASE = API_URL_BASE + "/streams";
     private static final String HEADER_ACCEPT = "Accept";
     private static final String HEADER_AUTH = "Authorization";
     private static final String MEDIA_TWITCH_JSON_V3 = "application/vnd.twitchtv.v3+json";
     private static final String MEDIA_JSON = "application/json";
     private static final String TAG = "TwitchApiImpl";
     private final OkHttpClient httpClient;
-    private final String oauthToken;
+    @Nullable
+    private String oauthToken;
 
-    public TwitchApiImpl(String oauthToken, OkHttpClient httpClient) {
+    public TwitchApiImpl(@Nullable String oauthToken, OkHttpClient httpClient) {
         this.oauthToken = oauthToken;
         this.httpClient = httpClient;
     }
@@ -56,6 +60,23 @@ public class TwitchApiImpl implements TwitchApi {
                         ))
                         .build();
                 httpClient.newCall(request).enqueue(new ChannelRequestCallback(callback));
+            }
+        });
+    }
+
+    @Override
+    public void setOAuthToken(@Nullable String token) {
+        this.oauthToken = token;
+    }
+
+    @Override
+    public void getStream(final StreamCallback callback) {
+        getChannel(new ChannelCallback() {
+            @Override
+            public void onGetChannel(Channel channel) {
+                Request.Builder streamReq = getStandardAuthRequestBuilder(
+                        API_CHANNEL_STREAM_BASE + "/" + channel.getName());
+                httpClient.newCall(streamReq.build()).enqueue(new StreamRequestCallback(callback));
             }
         });
     }
@@ -100,6 +121,31 @@ public class TwitchApiImpl implements TwitchApi {
                 String body = response.body().string();
                 Channel channel = channelAdapter.fromJson(body);
                 this.channelCallback.onGetChannel(channel);
+            }
+        }
+    }
+
+    private static class StreamRequestCallback implements Callback {
+
+        private final StreamCallback streamCallback;
+
+        StreamRequestCallback(StreamCallback streamCallback) {
+            this.streamCallback = streamCallback;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d(TAG, "onFailure() called with: " + "call = [" + call + "], e = [" + e + "]");
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            if (response.isSuccessful()) {
+                Moshi moshi = new Moshi.Builder().build();
+                JsonAdapter<Stream> streamAdapter = moshi.adapter(Stream.class);
+                String body = response.body().string();
+                Stream stream = streamAdapter.fromJson(body);
+                streamCallback.onGetStream(stream);
             }
         }
     }
