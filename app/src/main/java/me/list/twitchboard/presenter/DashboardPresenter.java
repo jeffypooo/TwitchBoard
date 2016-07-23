@@ -1,5 +1,7 @@
 package me.list.twitchboard.presenter;
 
+import android.support.annotation.Nullable;
+
 import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.model.Channel;
 import me.list.twitchboard.twitch.model.Stream;
@@ -30,7 +32,7 @@ public class DashboardPresenter {
     public void refreshChannelStats() {
         twitchApi.getStream(new TwitchApi.StreamCallback() {
             @Override
-            public void onGetStream(Stream stream) {
+            public void onGetStream(@Nullable Stream stream) {
                 updateStreamInfo(stream);
             }
         });
@@ -53,9 +55,10 @@ public class DashboardPresenter {
         this.dashboardView.setFollowerCount(channel.getFollowers());
     }
 
-    private void updateStreamInfo(Stream stream) {
-        int viewerCount = stream.getViewers() == null ? -1 : stream.getViewers();
-        dashboardView.setViewerCount(viewerCount);
+    private void updateStreamInfo(@Nullable Stream stream) {
+        if (stream != null) {
+            dashboardView.setViewerCount(stream.getViewers());
+        }
     }
 
 

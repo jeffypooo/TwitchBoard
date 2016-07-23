@@ -93,14 +93,13 @@ public class DashboardPresenterTests {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 TwitchApi.StreamCallback cb = (TwitchApi.StreamCallback) invocation.getArguments()[0];
                 cb.onGetStream(new Stream()
-                        .withGame("test game")
-                        .withViewers(1000));
+                                .withGame("test game")
+                                .withViewers(1000));
                 return null;
             }
         }).when(mockApi).getStream(any(TwitchApi.StreamCallback.class));
         presenter.refreshChannelStats();
         verify(mockView).setViewerCount(1000);
     }
-
 
 }

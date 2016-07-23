@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import me.list.twitchboard.presenter.DashboardPresenter;
 import me.list.twitchboard.twitch.TwitchApiImpl;
 import me.list.twitchboard.view.DashboardView;
 import okhttp3.OkHttpClient;
 
 public class DashboardFragment extends Fragment implements DashboardView {
+    private static final String TAG = "DashboardFragment";
 
     //region Views
 
@@ -42,22 +47,43 @@ public class DashboardFragment extends Fragment implements DashboardView {
     @BindView(R.id.Dashboard_Layout)
     LinearLayout rootLayout;
 
+    private Unbinder unbinder;
+
     //endregion
 
     DashboardPresenter presenter;
+    RefreshTask refreshTask;
 
-    //region Activity Lifecycle
+    //region Fragment Lifecycle
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_dashboard, container, false);
-        ButterKnife.bind(this, root);
-        initPresenter();
-        refreshChannelInfo();
+        View root = inflater.inflate(R.layout.dashboard_view, container, false);
+        unbinder = ButterKnife.bind(this, root);
         return root;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        initPresenter();
+        refreshTask = new RefreshTask();
+        refreshTask.start();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        refreshTask.cancelled.set(true);
+        refreshTask = null;
+    }
 
     //endregion
 
@@ -121,6 +147,8 @@ public class DashboardFragment extends Fragment implements DashboardView {
 
     //endregion
 
+    //region Listeners
+
     @OnClick(R.id.Dashboard_Button_Update)
     void updateClicked() {
         InputMethodManager imm = (InputMethodManager) getActivity()
@@ -134,6 +162,10 @@ public class DashboardFragment extends Fragment implements DashboardView {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         presenter.onUpdateClicked(getStatusText(), getGameText());
     }
+
+    //endregion
+
+    //region Helpers
 
     private String getStatusText() {
         return statusField.getText().toString();
@@ -153,9 +185,42 @@ public class DashboardFragment extends Fragment implements DashboardView {
     }
 
     private void refreshChannelInfo() {
+        Log.d(TAG, "refreshing...");
         presenter.loadChannel();
         presenter.refreshChannelStats();
     }
 
+    //endregion
+
+    //TODO should probably move this into the presenter or abstract and pass to presenter
+    private class RefreshTask extends Thread {
+
+        private final AtomicBoolean cancelled = new AtomicBoolean(false);
+        private long intervalMillis = 30000;
+
+        RefreshTask(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
+        RefreshTask() {
+        }
+
+        @Override
+        public void run() {
+            while (!cancelled.get()) {
+                try {
+                    refreshChannelInfo();
+                    Thread.sleep(intervalMillis);
+                } catch (InterruptedException e) {
+                    if (cancelled.get()) {
+                        break;
+                    }
+                }
+
+            }
+        }
+
+
+    }
 
 }

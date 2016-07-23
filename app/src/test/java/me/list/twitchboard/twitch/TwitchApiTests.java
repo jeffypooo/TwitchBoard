@@ -5,7 +5,11 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.concurrent.CountDownLatch;
+
 import me.list.twitchboard.twitch.model.Channel;
+import me.list.twitchboard.twitch.model.Stream;
+import me.list.twitchboard.twitch.model.StreamContainer;
 import okhttp3.OkHttpClient;
 
 import static org.mockito.Matchers.any;
@@ -21,7 +25,7 @@ public class TwitchApiTests {
 
     TwitchApi twitchApi;
     OkHttpClient httpClient;
-    static final String testAuthToken = "vtllft6ufa8hgii319lkr33fxxc1bs";
+    static final String testAuthToken = "ponh9x5093wvi4z2zaxtf2iecm7m6p";
 
     @Before
     public void setup() {
@@ -44,6 +48,29 @@ public class TwitchApiTests {
         }).when(callback).onGetChannel(any(Channel.class));
         twitchApi.getChannel(callback);
         verify(callback, timeout(1000)).onGetChannel(any(Channel.class));
+    }
+
+    //TODO test with mocks instead of hitting actual API
+    @Test
+    public void shouldGetExpectedStream() throws InterruptedException {
+        TwitchApi.StreamCallback callback = mock(TwitchApi.StreamCallback.class);
+        final CountDownLatch streamGetLatch = new CountDownLatch(1);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                StreamContainer s  = (StreamContainer) invocation.getArguments()[0];
+                System.out.println("onGetStream: " + s);
+                streamGetLatch.countDown();
+                return null;
+            }
+        }).when(callback).onGetStream(any(Stream.class));
+        twitchApi.getStream(callback);
+        streamGetLatch.await();
+    }
+
+    @Test
+    public void shouldGetExpectedChat() {
+        twitchApi.connectToChat();
     }
 
     //TODO test with mocks instead of real objects

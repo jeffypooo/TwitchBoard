@@ -9,7 +9,7 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import me.list.twitchboard.twitch.model.Channel;
-import me.list.twitchboard.twitch.model.Stream;
+import me.list.twitchboard.twitch.model.StreamContainer;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -22,6 +22,8 @@ import okhttp3.Response;
  * Created by masterjefferson on 7/16/2016.
  */
 public class TwitchApiImpl implements TwitchApi {
+
+
 
     private static final String API_URL_BASE = "https://api.twitch.tv/kraken";
     private static final String API_URL_CHANNEL_READ = API_URL_BASE + "/channel";
@@ -79,6 +81,11 @@ public class TwitchApiImpl implements TwitchApi {
                 httpClient.newCall(streamReq.build()).enqueue(new StreamRequestCallback(callback));
             }
         });
+    }
+
+    @Override
+    public void connectToChat() {
+
     }
 
     private String getAuthArg() {
@@ -142,12 +149,13 @@ public class TwitchApiImpl implements TwitchApi {
         public void onResponse(Call call, Response response) throws IOException {
             if (response.isSuccessful()) {
                 Moshi moshi = new Moshi.Builder().build();
-                JsonAdapter<Stream> streamAdapter = moshi.adapter(Stream.class);
+                JsonAdapter<StreamContainer> streamAdapter = moshi.adapter(StreamContainer.class);
                 String body = response.body().string();
-                Stream stream = streamAdapter.fromJson(body);
-                streamCallback.onGetStream(stream);
+                StreamContainer container = streamAdapter.fromJson(body);
+                streamCallback.onGetStream(container.getStream());
             }
         }
     }
+
 
 }

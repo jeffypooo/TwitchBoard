@@ -1,5 +1,7 @@
 package me.list.twitchboard.twitch;
 
+import android.support.annotation.Nullable;
+
 import me.list.twitchboard.twitch.model.Channel;
 import me.list.twitchboard.twitch.model.Stream;
 
@@ -13,7 +15,7 @@ public interface TwitchApi {
     }
 
     interface StreamCallback {
-        void onGetStream(Stream stream);
+        void onGetStream(@Nullable Stream stream);
     }
 
     void getChannel(ChannelCallback callback);
@@ -23,5 +25,7 @@ public interface TwitchApi {
     void updateChannel(String status, String game, ChannelCallback callback);
 
     void setOAuthToken(String token);
+
+    void connectToChat();
 
 }

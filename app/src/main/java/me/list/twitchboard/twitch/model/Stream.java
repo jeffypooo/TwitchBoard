@@ -1,9 +1,6 @@
 
 package me.list.twitchboard.twitch.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Stream {
 
     private String game;
@@ -14,10 +11,8 @@ public class Stream {
     private Boolean isPlaylist;
     private String createdAt;
     private Integer id;
-    private Channel channel;
     private Preview preview;
-    private StreamLinks links;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private StreamLinks _links;
 
     /**
      * 
@@ -48,7 +43,7 @@ public class Stream {
      *     The viewers
      */
     public Integer getViewers() {
-        return viewers;
+        return viewers == null ? 0 : viewers;
     }
 
     /**
@@ -206,29 +201,6 @@ public class Stream {
     /**
      * 
      * @return
-     *     The channel
-     */
-    public Channel getChannel() {
-        return channel;
-    }
-
-    /**
-     * 
-     * @param channel
-     *     The channel
-     */
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
-
-    public Stream withChannel(Channel channel) {
-        this.channel = channel;
-        return this;
-    }
-
-    /**
-     * 
-     * @return
      *     The preview
      */
     public Preview getPreview() {
@@ -252,10 +224,10 @@ public class Stream {
     /**
      * 
      * @return
-     *     The links
+     *     The _links
      */
     public StreamLinks getLinks() {
-        return links;
+        return _links;
     }
 
     /**
@@ -264,24 +236,11 @@ public class Stream {
      *     The _links
      */
     public void setLinks(StreamLinks links) {
-        this.links = links;
+        this._links = links;
     }
 
     public Stream withLinks(StreamLinks links) {
-        this.links = links;
-        return this;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public Stream withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+        this._links = links;
         return this;
     }
 

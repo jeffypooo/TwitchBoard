@@ -1,16 +1,12 @@
 
 package me.list.twitchboard.twitch.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Preview {
 
     private String small;
     private String medium;
     private String large;
     private String template;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -101,19 +97,6 @@ public class Preview {
 
     public Preview withTemplate(String template) {
         this.template = template;
-        return this;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public Preview withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
         return this;
     }
 

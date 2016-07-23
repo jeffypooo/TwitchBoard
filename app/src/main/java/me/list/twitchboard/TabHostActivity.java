@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.list.twitchboard.view.ChatFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TabHostActivity extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class TabHostActivity extends AppCompatActivity {
         viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
     }
 
+    //TODO make this not shit
     private class TabsAdapter extends FragmentPagerAdapter {
 
         public TabsAdapter(FragmentManager fm) {
@@ -45,17 +47,31 @@ public class TabHostActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Live";
+            switch (position) {
+                case 0:
+                    return "Dashboard";
+                case 1:
+                    return "Chat";
+                default:
+                    throw new RuntimeException("this position is invalid: " + position);
+            }
         }
 
         @Override
         public Fragment getItem(int position) {
-            return new DashboardFragment();
+            switch (position) {
+                case 0:
+                    return new DashboardFragment();
+                case 1:
+                    return new ChatFragment();
+                default:
+                    throw new RuntimeException("this position is invalid: " + position);
+            }
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
     }
 

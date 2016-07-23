@@ -13,5 +13,7 @@
     <string name="views_placeholder">1234</string>
     <string name="follows_placeholder">7</string>
     <string name="viewers_placheolder">11</string>
+    <string name="send">Send</string>
+    <string name="enter_message">Enter message...</string>
 
 </resources>
