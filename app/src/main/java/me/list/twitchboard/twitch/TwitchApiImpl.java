@@ -65,18 +65,38 @@ public class TwitchApiImpl implements TwitchApi {
     }
 
     @Override
-    public void setOAuthToken(@Nullable String token) {
-        this.oauthToken = token;
+    public void getStream(StreamCallback callback) {
+        
     }
 
     @Override
-    public void getStream(final StreamCallback callback) {
-        getChannel(new ChannelCallback() {
+    public void setOAuthToken(String token) {
+
+    }
+
+    @Override
+    public void getChannel2(final MyCallback<Channel> channelCallback) {
+        Request request = getStandardAuthRequestBuilder(API_URL_CHANNEL_READ).build();
+        this.httpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onGetChannel(Channel channel) {
-                Request.Builder streamReq = getStandardAuthRequestBuilder(
-                        API_CHANNEL_STREAM_BASE + "/" + channel.getName());
-                httpClient.newCall(streamReq.build()).enqueue(new StreamRequestCallback(callback));
+            public void onFailure(Call call, IOException e) {
+                channelCallback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+
+                } else {
+                    // work out what went wrong
+                    switch (response.code()) {
+                        case 401:
+                            channelCallback.onFailure(new RuntimeException("unauthorized"));
+                            break;
+                        default:
+                            channelCallback.onFailure(new RuntimeException("unknown"));
+                    }
+                }
             }
         });
     }

@@ -24,4 +24,11 @@ public interface TwitchApi {
 
     void setOAuthToken(String token);
 
+    interface MyCallback<T> {
+        void onReceived(T t);
+
+        void onFailure(Exception e);
+    }
+
+    void getChannel2(MyCallback<Channel> channelCallback);
 }
