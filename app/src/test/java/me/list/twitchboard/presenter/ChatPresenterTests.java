@@ -2,9 +2,10 @@ package me.list.twitchboard.presenter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import me.list.twitchboard.twitch.IrcListener;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Created by masterjefferson on 7/23/2016.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ChatPresenterTests {
 
     @Mock
@@ -30,7 +32,6 @@ public class ChatPresenterTests {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         presenter = new ChatPresenter(mockView, mockClient);
     }
 
@@ -82,6 +83,12 @@ public class ChatPresenterTests {
     public void shouldSendMessageWhenSendPressed() {
         presenter.onSendClick("test");
         verify(mockClient).sendChannelMessage("test");
+    }
+
+    @Test
+    public void shouldDisplaySentMessageWhenSendPressed() {
+        presenter.onSendClick("test");
+        verify(mockView).showSentMessage("test");
     }
 
 }

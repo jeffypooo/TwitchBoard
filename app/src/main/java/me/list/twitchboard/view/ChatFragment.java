@@ -44,6 +44,8 @@ public class ChatFragment extends Fragment implements ChatView {
 
     private ChatPresenter presenter;
 
+    //region Fragment Lifecycle
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,16 +55,32 @@ public class ChatFragment extends Fragment implements ChatView {
         return root;
     }
 
+    //endregion
+
+    //region View Listeners
 
     @OnClick(R.id.ChatView_SendButton)
     void onSendButtonClick() {
         //TODO send the message
     }
 
+    //endregion
+
+    //region ChatView Implementation
+
     @Override
     public void showNotification(String msg) {
         Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG).show();
     }
+
+    @Override
+    public void showSentMessage(String msg) {
+
+    }
+
+    //endregion
+
+    //region Initialization Helpers
 
     private void onPresenterInitialized() {
         presenter.connectToChat();
@@ -84,4 +102,7 @@ public class ChatFragment extends Fragment implements ChatView {
             }
         });
     }
+
+    //endregion
+
 }

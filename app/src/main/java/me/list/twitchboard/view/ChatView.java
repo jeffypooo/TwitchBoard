@@ -6,5 +6,6 @@ package me.list.twitchboard.view;
 public interface ChatView {
 
     void showNotification(String msg);
+    void showSentMessage(String msg);
 
 }

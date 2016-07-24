@@ -24,6 +24,7 @@ public class ChatPresenter implements IrcListener {
 
     public void onSendClick(String message) {
         ircClient.sendChannelMessage(message);
+        chatView.showSentMessage(message);
     }
 
     @Override
