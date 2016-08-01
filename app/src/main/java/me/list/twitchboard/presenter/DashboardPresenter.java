@@ -13,7 +13,7 @@ import me.list.twitchboard.view.DashboardView;
 public class DashboardPresenter {
 
     private final DashboardView dashboardView;
-    private final TwitchApi twitchApi;
+    private final TwitchApi     twitchApi;
 
     public DashboardPresenter(DashboardView dashboardView, TwitchApi twitchApi) {
         this.dashboardView = dashboardView;
@@ -29,7 +29,7 @@ public class DashboardPresenter {
         });
     }
 
-    public void refreshChannelStats() {
+    public void loadStream() {
         twitchApi.getStream(new TwitchApi.StreamCallback() {
             @Override
             public void onGetStream(@Nullable Stream stream) {
@@ -58,9 +58,11 @@ public class DashboardPresenter {
     private void updateStreamInfo(@Nullable Stream stream) {
         if (stream != null) {
             dashboardView.setViewerCount(stream.getViewers());
+            dashboardView.setStreamStatus(true);
+        } else {
+            dashboardView.setViewerCount(-1);
+            dashboardView.setStreamStatus(false);
         }
     }
-
-
 
 }

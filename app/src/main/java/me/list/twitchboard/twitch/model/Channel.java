@@ -1,36 +1,34 @@
-
 package me.list.twitchboard.twitch.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Channel {
 
-    private Boolean mature;
-    private String status;
-    private String broadcasterLanguage;
-    private String displayName;
-    private String game;
-    private Object delay;
-    private String language;
-    private Integer id;
-    private String name;
-    private String createdAt;
-    private String updatedAt;
-    private String logo;
-    private String banner;
-    private String videoBanner;
-    private Object background;
-    private String profileBanner;
-    private String profileBannerBackgroundColor;
-    private Boolean partner;
-    private String url;
-    private Integer views;
-    private Integer followers;
+    private Boolean      mature;
+    private String       status;
+    private String       broadcasterLanguage;
+    private String       displayName;
+    private String       game;
+    private Object       delay;
+    private String       language;
+    private Integer      id;
+    private String       name;
+    private String       createdAt;
+    private String       updatedAt;
+    private String       logo;
+    private String       banner;
+    private String       videoBanner;
+    private Object       background;
+    private String       profileBanner;
+    private String       profileBannerBackgroundColor;
+    private Boolean      partner;
+    private String       url;
+    private Integer      views;
+    private Integer      followers;
     private ChannelLinks _links;
-    private String email;
-    private String streamKey;
+    private String       email;
+    private String       streamKey;
     private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**

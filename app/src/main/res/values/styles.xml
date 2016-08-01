@@ -25,6 +25,11 @@
         <item name="fontPath">@string/twitch_font_path</item>
     </style>
 
+    <style name="TwitchBoard.TextAppearance.TextSecondary" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_large</item>
+    </style>
+
     <style name="TwitchFontHeader" parent="TwitchBoard.TextAppearance.TwitchFont">
         <item name="android:textSize">@dimen/text_huge</item>
     </style>

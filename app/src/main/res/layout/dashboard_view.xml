@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/Dashboard_Layout"
+    android:id="@+id/Dashboard_LinearLayout_RootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/margin_med"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".DashboardFragment">
 
     <TextView
@@ -23,7 +20,7 @@
         android:id="@+id/Dashboard_EditText_Status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vert_med"
+        android:layout_marginTop="@dimen/margin_med"
         android:gravity="center"
         android:hint="@string/broadcast_title_hint" />
 
@@ -32,14 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_vert_med"
+        android:layout_marginTop="@dimen/margin_med"
         android:text="@string/playing_header" />
 
     <EditText
         android:id="@+id/Dashboard_EditText_Game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vert_med"
+        android:layout_marginTop="@dimen/margin_med"
         android:gravity="center"
         android:hint="@string/game_hint" />
 
@@ -48,16 +45,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_vert_med"
+        android:layout_marginTop="@dimen/margin_med"
         android:text="@string/update" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="@dimen/margin_horiz_med"
-        android:layout_marginStart="@dimen/margin_horiz_med"
-        android:layout_marginTop="@dimen/margin_vert_med"
+        android:layout_marginEnd="@dimen/margin_med"
+        android:layout_marginStart="@dimen/margin_med"
+        android:layout_marginTop="@dimen/margin_med"
         android:orientation="horizontal">
 
         <ImageView
@@ -67,12 +64,12 @@
             android:src="@drawable/ic_person_purple_24dp" />
 
         <TextView
-            android:id="@+id/Dashboard_CurrentViewerCount"
+            android:id="@+id/Dashboard_TextView_CurrentViewerCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/margin_horiz_med"
-            android:text="@string/viewers_placheolder" />
+            android:layout_marginEnd="@dimen/margin_med"
+            android:text="@string/viewers_placeholder" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -81,11 +78,11 @@
             android:src="@drawable/ic_viewers_purple_24dp" />
 
         <TextView
-            android:id="@+id/Dashboard_ViewCount"
+            android:id="@+id/Dashboard_TextView_ViewCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/margin_horiz_med"
+            android:layout_marginEnd="@dimen/margin_med"
             android:text="@string/views_placeholder" />
 
         <ImageView
@@ -95,11 +92,41 @@
             android:src="@drawable/ic_follow_purple_24dp" />
 
         <TextView
-            android:id="@+id/Dashboard_FollowerCount"
+            android:id="@+id/Dashboard_TextView_FollowerCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/follows_placeholder" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="@dimen/margin_med"
+        android:layout_marginStart="@dimen/margin_med"
+        android:layout_marginTop="@dimen/margin_small"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/Dashboard_ImageView_StreamStatusIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_record_red_24dp" />
+
+        <TextView
+            android:id="@+id/Dashboard_TextView_StreamStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/offline"/>
+
 
 
     </LinearLayout>

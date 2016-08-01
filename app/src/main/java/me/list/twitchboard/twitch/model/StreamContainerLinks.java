@@ -1,4 +1,3 @@
-
 package me.list.twitchboard.twitch.model;
 
 public class StreamContainerLinks {
@@ -7,18 +6,14 @@ public class StreamContainerLinks {
     private String self;
 
     /**
-     * 
-     * @return
-     *     The channel
+     * @return The channel
      */
     public String getChannel() {
         return channel;
     }
 
     /**
-     * 
-     * @param channel
-     *     The channel
+     * @param channel The channel
      */
     public void setChannel(String channel) {
         this.channel = channel;
@@ -30,18 +25,14 @@ public class StreamContainerLinks {
     }
 
     /**
-     * 
-     * @return
-     *     The self
+     * @return The self
      */
     public String getSelf() {
         return self;
     }
 
     /**
-     * 
-     * @param self
-     *     The self
+     * @param self The self
      */
     public void setSelf(String self) {
         this.self = self;

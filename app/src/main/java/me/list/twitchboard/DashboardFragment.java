@@ -2,6 +2,7 @@ package me.list.twitchboard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -13,11 +14,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import butterknife.BindDrawable;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,35 +34,43 @@ import okhttp3.OkHttpClient;
 public class DashboardFragment extends Fragment implements DashboardView {
     private static final String TAG = "DashboardFragment";
 
-    //region Views
+    //region View Bindings
 
-    @BindView(R.id.Dashboard_EditText_Status)
-    EditText statusField;
-    @BindView(R.id.Dashboard_EditText_Game)
-    EditText gameField;
-    @BindView(R.id.Dashboard_Button_Update)
-    Button updateButton;
-    @BindView(R.id.Dashboard_CurrentViewerCount)
-    TextView currentViewerCount;
-    @BindView(R.id.Dashboard_ViewCount)
-    TextView totalViewCount;
-    @BindView(R.id.Dashboard_FollowerCount)
-    TextView followerCount;
-    @BindView(R.id.Dashboard_Layout)
-    LinearLayout rootLayout;
-
-    private Unbinder unbinder;
+    @BindView(R.id.Dashboard_EditText_Status)             EditText     statusField;
+    @BindView(R.id.Dashboard_EditText_Game)               EditText     gameField;
+    @BindView(R.id.Dashboard_Button_Update)               Button       updateButton;
+    @BindView(R.id.Dashboard_TextView_CurrentViewerCount) TextView     currentViewerCount;
+    @BindView(R.id.Dashboard_TextView_ViewCount)          TextView     totalViewCount;
+    @BindView(R.id.Dashboard_TextView_FollowerCount)      TextView     followerCount;
+    @BindView(R.id.Dashboard_ImageView_StreamStatusIcon)  ImageView    streamStatusImg;
+    @BindView(R.id.Dashboard_TextView_StreamStatusText)   TextView     streamStatusText;
+    @BindView(R.id.Dashboard_LinearLayout_RootLayout)     LinearLayout rootLayout;
 
     //endregion
 
+    //region Resource Bindings
+
+    @BindDrawable(R.drawable.ic_record_green_24dp) Drawable streamOnlineIcon;
+    @BindString(R.string.online)                   String   streamOnlineStr;
+    @BindDrawable(R.drawable.ic_record_red_24dp)   Drawable streamOfflineIcon;
+    @BindString(R.string.offline)                  String   streamOfflineStr;
+
+    //endregion
+
+    //region Members
+
+    Unbinder           unbinder;
     DashboardPresenter presenter;
-    RefreshTask refreshTask;
+    RefreshTask        refreshTask;
+
+    //endregion
 
     //region Fragment Lifecycle
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+    Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.dashboard_view, container, false);
         unbinder = ButterKnife.bind(this, root);
         return root;
@@ -124,6 +136,12 @@ public class DashboardFragment extends Fragment implements DashboardView {
         Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void setStreamStatus(boolean online) {
+        updateStreamStatusText(online);
+        updateStreamStatusIcon(online);
+    }
+
     //endregion
 
     //region Initialization
@@ -136,14 +154,12 @@ public class DashboardFragment extends Fragment implements DashboardView {
         );
     }
 
-
     @Nullable
     private String loadAuthToken() {
         SharedPreferences prefs = getActivity()
                 .getSharedPreferences(TwitchBoard.PREFS_AUTH, Context.MODE_PRIVATE);
         return prefs.getString(TwitchBoard.KEY_AUTH_TOKEN, null);
     }
-
 
     //endregion
 
@@ -155,7 +171,8 @@ public class DashboardFragment extends Fragment implements DashboardView {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = getActivity().getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        //If no view currently has focus, create a new one, just so we can grab a window token
+        // from it
         if (view == null) {
             view = new View(getActivity());
         }
@@ -175,6 +192,14 @@ public class DashboardFragment extends Fragment implements DashboardView {
         return gameField.getText().toString();
     }
 
+    private void updateStreamStatusText(boolean online) {
+        threadSafeTextViewUpdate(streamStatusText, online ? streamOnlineStr : streamOfflineStr);
+    }
+
+    private void updateStreamStatusIcon(boolean online) {
+        threadSafeImageViewUpdate(streamStatusImg, online ? streamOnlineIcon : streamOfflineIcon);
+    }
+
     private void threadSafeTextViewUpdate(final TextView view, final String text) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -184,19 +209,30 @@ public class DashboardFragment extends Fragment implements DashboardView {
         });
     }
 
+    private void threadSafeImageViewUpdate(final ImageView view, final Drawable img) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                view.setImageDrawable(img);
+            }
+        });
+    }
+
     private void refreshChannelInfo() {
         Log.d(TAG, "refreshing...");
         presenter.loadChannel();
-        presenter.refreshChannelStats();
+        presenter.loadStream();
     }
 
     //endregion
 
+    //region RefreshTask (background updater)
+
     //TODO should probably move this into the presenter or abstract and pass to presenter
     private class RefreshTask extends Thread {
 
-        private final AtomicBoolean cancelled = new AtomicBoolean(false);
-        private long intervalMillis = 30000;
+        private final AtomicBoolean cancelled      = new AtomicBoolean(false);
+        private       long          intervalMillis = 30000;
 
         RefreshTask(long intervalMillis) {
             this.intervalMillis = intervalMillis;
@@ -220,7 +256,7 @@ public class DashboardFragment extends Fragment implements DashboardView {
             }
         }
 
-
     }
 
+    //endregion
 }

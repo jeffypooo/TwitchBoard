@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 public interface SharedPrefsWrapper {
 
     void putString(String key, String value);
-
-    @Nullable
-    String getString(String key);
+    @Nullable String getString(String key);
+    void remove(String key);
+    void clearPreferences();
 
 }

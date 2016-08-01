@@ -1,4 +1,3 @@
-
 package me.list.twitchboard.twitch.model;
 
 public class Preview {
@@ -9,18 +8,14 @@ public class Preview {
     private String template;
 
     /**
-     * 
-     * @return
-     *     The small
+     * @return The small
      */
     public String getSmall() {
         return small;
     }
 
     /**
-     * 
-     * @param small
-     *     The small
+     * @param small The small
      */
     public void setSmall(String small) {
         this.small = small;
@@ -32,18 +27,14 @@ public class Preview {
     }
 
     /**
-     * 
-     * @return
-     *     The medium
+     * @return The medium
      */
     public String getMedium() {
         return medium;
     }
 
     /**
-     * 
-     * @param medium
-     *     The medium
+     * @param medium The medium
      */
     public void setMedium(String medium) {
         this.medium = medium;
@@ -55,18 +46,14 @@ public class Preview {
     }
 
     /**
-     * 
-     * @return
-     *     The large
+     * @return The large
      */
     public String getLarge() {
         return large;
     }
 
     /**
-     * 
-     * @param large
-     *     The large
+     * @param large The large
      */
     public void setLarge(String large) {
         this.large = large;
@@ -78,18 +65,14 @@ public class Preview {
     }
 
     /**
-     * 
-     * @return
-     *     The template
+     * @return The template
      */
     public String getTemplate() {
         return template;
     }
 
     /**
-     * 
-     * @param template
-     *     The template
+     * @param template The template
      */
     public void setTemplate(String template) {
         this.template = template;

@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
  * Created by masterjefferson on 7/23/2016.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChatPresenterTests {
+public class ChatPresenterTest {
 
     @Mock
     ChatView mockView;

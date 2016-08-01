@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/margin_med">
+
+    <TextView
+        android:id="@+id/Account_TextView_DisplayName"
+        android:layout_marginTop="@dimen/margin_med"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@style/TwitchFontHeader"
+        android:text="@string/display_name_placeholder"
+        />
+
+
+    <ImageView
+        android:id="@+id/Account_ImageView_UserImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_med"
+        android:minHeight="120dp"
+        android:minWidth="120dp"
+        />
+
+    <TextView
+        android:id="@+id/Account_TextView_UserName"
+        android:layout_marginTop="@dimen/margin_med"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/display_name_placeholder"
+        android:textSize="@dimen/text_small"
+        />
+
+    <Button
+        android:id="@+id/Account_Button_DeAuthButton"
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/de_authorize"/>
+
+</LinearLayout>

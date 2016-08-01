@@ -15,7 +15,7 @@ public class SharedPrefsWrapperImpl implements SharedPrefsWrapper {
 
     private static final String TAG = "SharedPrefsWrapperImpl";
     private final WeakReference<Context> contextRef;
-    private final String prefsName;
+    private final String                 prefsName;
 
     public SharedPrefsWrapperImpl(Context context, String prefsName) {
         this.contextRef = new WeakReference<>(context);
@@ -39,6 +39,25 @@ public class SharedPrefsWrapperImpl implements SharedPrefsWrapper {
             return preferences.getString(key, null);
         }
         return null;
+    }
+
+    @Override
+    public void remove(String key) {
+        SharedPreferences.Editor editor = getEditor();
+        if (editor != null) {
+            LOG.d(TAG, "remove: %s", key);
+            editor.remove(key);
+            editor.commit();
+        }
+    }
+
+    @Override
+    public void clearPreferences() {
+        SharedPreferences.Editor editor = getEditor();
+        if (editor != null) {
+            editor.clear();
+            editor.commit();
+        }
     }
 
     @Nullable

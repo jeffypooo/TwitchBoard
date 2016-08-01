@@ -27,9 +27,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.Login_ViewSwitcher)
     ViewSwitcher viewSwitcher;
     @BindView(R.id.Login_WebView_AuthorizeWebView)
-    WebView webView;
+    WebView      webView;
     @BindView(R.id.Login_Button_Authorize)
-    Button authorizeButton;
+    Button       authorizeButton;
 
     LoginPresenter presenter;
 

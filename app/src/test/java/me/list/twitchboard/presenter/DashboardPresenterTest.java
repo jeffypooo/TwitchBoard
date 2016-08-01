@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Created by masterjefferson on 7/16/2016.
  */
-public class DashboardPresenterTests {
+public class DashboardPresenterTest {
 
     DashboardPresenter presenter;
     DashboardView mockView;
@@ -98,8 +98,38 @@ public class DashboardPresenterTests {
                 return null;
             }
         }).when(mockApi).getStream(any(TwitchApi.StreamCallback.class));
-        presenter.refreshChannelStats();
+        presenter.loadStream();
         verify(mockView).setViewerCount(1000);
+    }
+
+    @Test
+    public void shouldUpdateStreamStatusWithOnline() {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                TwitchApi.StreamCallback cb = (TwitchApi.StreamCallback) invocation.getArguments()[0];
+                cb.onGetStream(new Stream()
+                        .withGame("test game")
+                        .withViewers(1000));
+                return null;
+            }
+        }).when(mockApi).getStream(any(TwitchApi.StreamCallback.class));
+        presenter.loadStream();
+        verify(mockView).setStreamStatus(true);
+    }
+
+    @Test
+    public void shouldUpdateStreamStatusWithOffline() {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                TwitchApi.StreamCallback cb = (TwitchApi.StreamCallback) invocation.getArguments()[0];
+                cb.onGetStream(null);
+                return null;
+            }
+        }).when(mockApi).getStream(any(TwitchApi.StreamCallback.class));
+        presenter.loadStream();
+        verify(mockView).setStreamStatus(false);
     }
 
 }

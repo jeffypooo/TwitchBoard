@@ -9,7 +9,7 @@ import me.list.twitchboard.view.ChatView;
  */
 public class ChatPresenter implements IrcListener {
 
-    private final ChatView chatView;
+    private final ChatView        chatView;
     private final TwitchIrcClient ircClient;
 
     public ChatPresenter(ChatView chatView, TwitchIrcClient ircClient) {

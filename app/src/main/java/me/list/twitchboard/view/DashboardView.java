@@ -17,4 +17,6 @@ public interface DashboardView {
 
     void showUpdateConfirmation(String name, String game);
 
+    void setStreamStatus(boolean online);
+
 }

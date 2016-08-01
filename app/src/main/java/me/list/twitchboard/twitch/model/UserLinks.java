@@ -1,6 +1,7 @@
+
 package me.list.twitchboard.twitch.model;
 
-public class StreamLinks {
+public class UserLinks {
 
     private String self;
 
@@ -18,7 +19,7 @@ public class StreamLinks {
         this.self = self;
     }
 
-    public StreamLinks withSelf(String self) {
+    public UserLinks withSelf(String self) {
         this.self = self;
         return this;
     }

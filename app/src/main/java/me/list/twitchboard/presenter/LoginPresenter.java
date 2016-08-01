@@ -24,11 +24,13 @@ import static me.list.twitchboard.twitch.AuthScope.USER_READ;
  */
 public class LoginPresenter {
 
-    private final LoginView loginView;
+    private final LoginView          loginView;
     private final SharedPrefsWrapper prefsWrapper;
-    private final TwitchApi twitchApi;
+    private final TwitchApi          twitchApi;
 
-    public LoginPresenter(LoginView loginView, SharedPrefsWrapper prefsWrapper, TwitchApi twitchApi) {
+    public LoginPresenter(LoginView loginView,
+                          SharedPrefsWrapper prefsWrapper,
+                          TwitchApi twitchApi) {
         this.loginView = loginView;
         this.prefsWrapper = prefsWrapper;
         this.twitchApi = twitchApi;

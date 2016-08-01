@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,10 @@ import butterknife.Unbinder;
 import me.list.twitchboard.R;
 import me.list.twitchboard.TwitchBoard;
 import me.list.twitchboard.presenter.ChatPresenter;
+import me.list.twitchboard.twitch.IrcListener;
 import me.list.twitchboard.twitch.TwitchApi;
 import me.list.twitchboard.twitch.TwitchApiImpl;
-import me.list.twitchboard.twitch.TwitchIrcBot;
+import me.list.twitchboard.twitch.TwitchIrcClient;
 import me.list.twitchboard.twitch.model.Channel;
 import okhttp3.OkHttpClient;
 
@@ -31,24 +33,21 @@ import okhttp3.OkHttpClient;
  * Created by masterjefferson on 7/23/2016.
  */
 public class ChatFragment extends Fragment implements ChatView {
-    @BindView(R.id.ChatView_RootLayout)
-    LinearLayout rootLayout;
-    @BindView(R.id.ChatView_MessageView)
-    ListView messageView;
-    @BindView(R.id.ChatView_MessageEntry)
-    EditText messageField;
-    @BindView(R.id.ChatView_SendButton)
-    Button  sendButton;
+    @BindView(R.id.ChatView_RootLayout)   LinearLayout rootLayout;
+    @BindView(R.id.ChatView_MessageView)  ListView     messageView;
+    @BindView(R.id.ChatView_MessageEntry) EditText     messageField;
+    @BindView(R.id.ChatView_SendButton)   Button       sendButton;
 
-    private Unbinder unbinder;
-
+    private Unbinder      unbinder;
     private ChatPresenter presenter;
 
     //region Fragment Lifecycle
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.chat_view, container, false);
         unbinder = ButterKnife.bind(this, root);
         initPresenter();
@@ -97,10 +96,35 @@ public class ChatFragment extends Fragment implements ChatView {
             public void onGetChannel(Channel channel) {
                 presenter = new ChatPresenter(
                         ChatFragment.this,
-                        new TwitchIrcBot(channel.getName(), token));
+                        new IrcClientStub());
                 onPresenterInitialized();
             }
         });
+    }
+
+    private class IrcClientStub implements TwitchIrcClient {
+
+        private static final String TAG = "IrcClientStub";
+
+        @Override
+        public void connectToTwitchChat() {
+            Log.d(TAG, "connectToTwitchChat() called with: " + "");
+        }
+
+        @Override
+        public void disconnectFromTwitch() {
+            Log.d(TAG, "disconnectFromTwitch() called with: " + "");
+        }
+
+        @Override
+        public void sendChannelMessage(String message) {
+            Log.d(TAG, "sendChannelMessage() called with: " + "message = [" + message + "]");
+        }
+
+        @Override
+        public void setIrcListener(IrcListener listener) {
+            Log.d(TAG, "setIrcListener() called with: " + "listener = [" + listener + "]");
+        }
     }
 
     //endregion

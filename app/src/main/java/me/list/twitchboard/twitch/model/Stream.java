@@ -1,32 +1,27 @@
-
 package me.list.twitchboard.twitch.model;
 
 public class Stream {
 
-    private String game;
-    private Integer viewers;
-    private Double averageFps;
-    private Integer delay;
-    private Integer videoHeight;
-    private Boolean isPlaylist;
-    private String createdAt;
-    private Integer id;
-    private Preview preview;
+    private String      game;
+    private Integer     viewers;
+    private Double      averageFps;
+    private Integer     delay;
+    private Integer     videoHeight;
+    private Boolean     isPlaylist;
+    private String      createdAt;
+    private Integer     id;
+    private Preview     preview;
     private StreamLinks _links;
 
     /**
-     * 
-     * @return
-     *     The game
+     * @return The game
      */
     public String getGame() {
         return game;
     }
 
     /**
-     * 
-     * @param game
-     *     The game
+     * @param game The game
      */
     public void setGame(String game) {
         this.game = game;
@@ -38,18 +33,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The viewers
+     * @return The viewers
      */
     public Integer getViewers() {
         return viewers == null ? 0 : viewers;
     }
 
     /**
-     * 
-     * @param viewers
-     *     The viewers
+     * @param viewers The viewers
      */
     public void setViewers(Integer viewers) {
         this.viewers = viewers;
@@ -61,18 +52,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The averageFps
+     * @return The averageFps
      */
     public Double getAverageFps() {
         return averageFps;
     }
 
     /**
-     * 
-     * @param averageFps
-     *     The average_fps
+     * @param averageFps The average_fps
      */
     public void setAverageFps(Double averageFps) {
         this.averageFps = averageFps;
@@ -84,18 +71,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The delay
+     * @return The delay
      */
     public Integer getDelay() {
         return delay;
     }
 
     /**
-     * 
-     * @param delay
-     *     The delay
+     * @param delay The delay
      */
     public void setDelay(Integer delay) {
         this.delay = delay;
@@ -107,18 +90,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The videoHeight
+     * @return The videoHeight
      */
     public Integer getVideoHeight() {
         return videoHeight;
     }
 
     /**
-     * 
-     * @param videoHeight
-     *     The video_height
+     * @param videoHeight The video_height
      */
     public void setVideoHeight(Integer videoHeight) {
         this.videoHeight = videoHeight;
@@ -130,18 +109,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The isPlaylist
+     * @return The isPlaylist
      */
     public Boolean getIsPlaylist() {
         return isPlaylist;
     }
 
     /**
-     * 
-     * @param isPlaylist
-     *     The is_playlist
+     * @param isPlaylist The is_playlist
      */
     public void setIsPlaylist(Boolean isPlaylist) {
         this.isPlaylist = isPlaylist;
@@ -153,18 +128,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     * 
-     * @param createdAt
-     *     The created_at
+     * @param createdAt The created_at
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
@@ -176,18 +147,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The _id
+     * @param id The _id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -199,18 +166,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The preview
+     * @return The preview
      */
     public Preview getPreview() {
         return preview;
     }
 
     /**
-     * 
-     * @param preview
-     *     The preview
+     * @param preview The preview
      */
     public void setPreview(Preview preview) {
         this.preview = preview;
@@ -222,18 +185,14 @@ public class Stream {
     }
 
     /**
-     * 
-     * @return
-     *     The _links
+     * @return The _links
      */
     public StreamLinks getLinks() {
         return _links;
     }
 
     /**
-     * 
-     * @param links
-     *     The _links
+     * @param links The _links
      */
     public void setLinks(StreamLinks links) {
         this._links = links;

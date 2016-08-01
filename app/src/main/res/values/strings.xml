@@ -12,8 +12,13 @@
     <string name="update">Update</string>
     <string name="views_placeholder">1234</string>
     <string name="follows_placeholder">7</string>
-    <string name="viewers_placheolder">11</string>
+    <string name="viewers_placeholder">11</string>
     <string name="send">Send</string>
     <string name="enter_message">Enter message...</string>
+    <string name="offline">OFFLINE</string>
+    <string name="online">ONLINE</string>
+    <string name="lwr_case_account">account</string>
+    <string name="display_name_placeholder">Display Name</string>
+    <string name="de_authorize">De-Authorize</string>
 
 </resources>

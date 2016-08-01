@@ -11,10 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:paddingBottom="@dimen/margin_vert_med"
-        android:paddingLeft="@dimen/margin_horiz_med"
-        android:paddingRight="@dimen/margin_horiz_med"
-        android:paddingTop="@dimen/margin_vert_med"
+        android:padding="@dimen/margin_med"
         tools:context="me.list.twitchboard.LoginActivity">
 
         <ImageView
@@ -27,11 +24,11 @@
 
         <Button
             android:id="@+id/Login_Button_Authorize"
-            android:layout_width="@dimen/width_btn_large"
+            android:layout_width="@dimen/btn_width_med"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Login_Image_Header"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/margin_vert_big"
+            android:layout_marginTop="@dimen/margin_big"
             android:text="@string/authorize" />
 
 
@@ -41,10 +38,10 @@
         android:id="@+id/Login_WebView_AuthorizeWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/margin_vert_med"
-        android:paddingLeft="@dimen/margin_horiz_med"
-        android:paddingRight="@dimen/margin_horiz_med"
-        android:paddingTop="@dimen/margin_vert_med"
+        android:paddingBottom="@dimen/margin_med"
+        android:paddingLeft="@dimen/margin_med"
+        android:paddingRight="@dimen/margin_med"
+        android:paddingTop="@dimen/margin_med"
         />
 
 </ViewSwitcher>
