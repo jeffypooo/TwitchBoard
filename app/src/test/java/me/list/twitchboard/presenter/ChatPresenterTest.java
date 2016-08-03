@@ -23,12 +23,11 @@ import static org.mockito.Mockito.verify;
 public class ChatPresenterTest {
 
     @Mock
-    ChatView mockView;
+    ChatView        mockView;
     @Mock
     TwitchIrcClient mockClient;
 
     ChatPresenter presenter;
-
 
     @Before
     public void setup() {

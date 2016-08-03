@@ -19,7 +19,7 @@ public class ChatPresenter implements IrcListener {
     }
 
     public void connectToChat() {
-        ircClient.connectToTwitchChat();
+
     }
 
     public void onSendClick(String message) {
