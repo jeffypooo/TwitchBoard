@@ -8,11 +8,10 @@ import android.support.annotation.Nullable;
 public class UrlFactory {
 
     static final String USER_AUTH_FORMAT = "https://api.twitch.tv/kraken/oauth2/authorize?" +
-                    "response_type=token" +
-                    "&client_id=%s" +
-                    "&redirect_uri=%s" +
-                    "&scope=%s";
-
+            "response_type=token" +
+            "&client_id=%s" +
+            "&redirect_uri=%s" +
+            "&scope=%s";
 
     public static String userAuthURL(String clientID, String redirectURI, String... scopes) {
         String scopesStr = getScopesString(scopes);
@@ -36,6 +35,5 @@ public class UrlFactory {
         }
         return scopesStr.toString();
     }
-
 
 }

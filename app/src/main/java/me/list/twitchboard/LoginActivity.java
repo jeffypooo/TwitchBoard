@@ -2,99 +2,95 @@ package me.list.twitchboard;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ViewSwitcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.list.twitchboard.twitch.TwitchApi;
-import me.list.twitchboard.twitch.UrlFactory;
-import me.list.twitchboard.util.logging.LOG;
+import me.list.twitchboard.presenter.LoginPresenter;
+import me.list.twitchboard.storage.SharedPrefsWrapperImpl;
+import me.list.twitchboard.twitch.TwitchApiImpl;
+import me.list.twitchboard.view.LoginView;
+import okhttp3.OkHttpClient;
 
-import static me.list.twitchboard.twitch.AuthScope.CHANNEL_EDITOR;
-import static me.list.twitchboard.twitch.AuthScope.CHANNEL_FEED_EDIT;
-import static me.list.twitchboard.twitch.AuthScope.CHANNEL_SUBSCRIPTIONS;
-import static me.list.twitchboard.twitch.AuthScope.CHAT_LOGIN;
-import static me.list.twitchboard.twitch.AuthScope.USER_BLOCKS_EDIT;
-import static me.list.twitchboard.twitch.AuthScope.USER_FOLLOWS_EDIT;
-import static me.list.twitchboard.twitch.AuthScope.USER_READ;
-
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private static final String TAG = "LoginActivity";
 
+    @BindView(R.id.Login_ViewSwitcher)
+    ViewSwitcher viewSwitcher;
+    @BindView(R.id.Login_WebView_AuthorizeWebView)
+    WebView      webView;
     @BindView(R.id.Login_Button_Authorize)
-    Button signInButton;
+    Button       authorizeButton;
+
+    LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        initPresenter();
+        initWebView();
+        presenter.verifyExistingToken();
     }
 
-
     @OnClick(R.id.Login_Button_Authorize)
-    public void didClickAuthorize(View view) {
-        Intent intent = new Intent(this, AuthorizeActivity.class);
-        intent.putExtra(AuthorizeActivity.EXTRA_AUTH_URL, getDefaultAuthURL());
-        startActivityForResult(intent, AuthorizeActivity.AUTHORIZE_USER_REQ);
+    void onAuthorizeClicked() {
+        presenter.authorizeClicked();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AuthorizeActivity.AUTHORIZE_USER_REQ) {
-            if (resultCode == AuthorizeActivity.AUTHORIZE_SUCCESS) {
-                String authToken = data.getStringExtra(AuthorizeActivity.EXTRA_AUTH_TOKEN);
-                persistAuthToken(authToken);
-                loginFinished();
-            } else {
-                LOG.w(TAG, "AUTH FAILED");
-            }
+    public void showNotification(String message) {
+        Snackbar.make(viewSwitcher, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showURL(final String url) {
+        viewSwitcher.showNext();
+        webView.loadUrl(url);
+    }
+
+    @Override
+    public void authorized() {
+        startActivity(new Intent(this, TabHostActivity.class));
+        finish();
+    }
+
+    private void initPresenter() {
+        presenter = new LoginPresenter(
+                this,
+                new SharedPrefsWrapperImpl(this, TwitchBoard.PREFS_AUTH),
+                new TwitchApiImpl(null, new OkHttpClient())
+        );
+    }
+
+    @SuppressLint("SetJavaScriptEnabled") //https://github.com/justintv/Twitch-API/issues/574
+    private void initWebView() {
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewHook(presenter));
+    }
+
+    private static class WebViewHook extends WebViewClient {
+
+        private final LoginPresenter presenter;
+
+        public WebViewHook(LoginPresenter presenter) {
+            this.presenter = presenter;
         }
-    }
 
-    //TODO this code may not be what we want for auth persistence...
-
-    private void loginFinished() {
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
-    }
-
-    @Nullable
-    private String loadAuthToken() {
-        SharedPreferences prefs = getAuthPrefs();
-        return prefs.getString(TwitchBoard.KEY_AUTH_TOKEN, null);
-    }
-
-    @SuppressLint("CommitPrefEdits")
-    private void persistAuthToken(String token) {
-        LOG.d(TAG, "persisting auth token: %s", token);
-        SharedPreferences.Editor prefsEditor = getAuthPrefs().edit();
-        prefsEditor.putString(TwitchBoard.KEY_AUTH_TOKEN, token);
-        prefsEditor.commit();
-    }
-
-    private SharedPreferences getAuthPrefs() {
-        return getSharedPreferences(TwitchBoard.PREFS_AUTH, MODE_PRIVATE);
-    }
-
-    private String getDefaultAuthURL() {
-        return UrlFactory.userAuthURL(
-                TwitchApi.CLIENT_ID,
-                TwitchApi.CLIENT_REDIRECT_URL,
-                USER_READ.raw,
-                USER_BLOCKS_EDIT.raw,
-                USER_FOLLOWS_EDIT.raw,
-                CHANNEL_EDITOR.raw,
-                CHANNEL_SUBSCRIPTIONS.raw,
-                CHAT_LOGIN.raw,
-                CHANNEL_FEED_EDIT.raw);
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            presenter.onPageLoadStarted(url);
+            super.onPageStarted(view, url, favicon);
+        }
     }
 }
